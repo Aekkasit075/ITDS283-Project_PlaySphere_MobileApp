@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           Container(
             width: 50.w,
-            color: Colors.grey.shade800,
+            color: const Color(0xFF796F6F),
             child: Column(
               children: [
                 GestureDetector(
@@ -91,8 +91,8 @@ class _HomeScreenState extends State<HomeScreen>
                     width: double.infinity,
                     color:
                         selectedIndex == 0
-                            ? Colors.grey.shade600
-                            : Colors.transparent,
+                            ? const Color(0xFF878383)
+                            : const Color(0xFF796F6F),
                     child: Column(
                       children: [
                         Icon(Icons.apps, color: Colors.white),
@@ -108,8 +108,8 @@ class _HomeScreenState extends State<HomeScreen>
                     width: double.infinity,
                     color:
                         selectedIndex == 1
-                            ? Colors.grey.shade600
-                            : Colors.transparent,
+                            ? const Color(0xFF878383)
+                            : const Color(0xFF796F6F),
                     child: Column(
                       children: [
                         Icon(Icons.add, color: Colors.white),
@@ -135,9 +135,11 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(3, (index) => GameCard()),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(5, (index) => GameCard()),
+                    ),
                   ),
                   SizedBox(height: 20.h),
                   Text(
@@ -148,7 +150,9 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   SizedBox(height: 10.h),
-                  Expanded(child: GameHistoryTable()),
+                  Expanded(
+                    child: GameHistoryTable(),
+                  ),
                 ],
               ),
             ),
@@ -162,16 +166,20 @@ class _HomeScreenState extends State<HomeScreen>
 class GameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(width: 80.w, height: 80.h, color: Colors.grey.shade400),
-        SizedBox(height: 5.h),
-        ElevatedButton(
-          onPressed: () {},
-          child: Text("play"),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-        ),
-      ],
+    return Container(
+      width: 80.w,
+      margin: EdgeInsets.only(right: 10.w),
+      child: Column(
+        children: [
+          Container(width: 80.w, height: 80.h, color: Colors.grey.shade400),
+          SizedBox(height: 5.h),
+          ElevatedButton(
+            onPressed: () {},
+            child: Text("play", style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -180,53 +188,42 @@ class GameHistoryTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Table(
-        border: TableBorder.all(),
-        columnWidths: {
-          0: FractionColumnWidth(0.1),
-          1: FractionColumnWidth(0.4),
-          2: FractionColumnWidth(0.2),
-          3: FractionColumnWidth(0.3),
-        },
-        children: [
-          TableRow(
-            decoration: BoxDecoration(color: Colors.grey.shade400),
-            children: [
-              TableCell(child: Center(child: Text("ลำดับ"))),
-              TableCell(child: Center(child: Text("ชื่อ"))),
-              TableCell(child: Center(child: Text("ราคา"))),
-              TableCell(child: Center(child: Text(""))),
-            ],
-          ),
-          TableRow(
-            children: [
-              TableCell(child: Center(child: Text("1"))),
-              TableCell(child: Center(child: Text("name"))),
-              TableCell(child: Center(child: Text("free"))),
-              TableCell(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                      ),
-                      child: Text("แก้ไข"),
+      scrollDirection: Axis.horizontal,  
+      child: DataTable(
+        columns: [
+          DataColumn(label: Text("ลำดับ")),
+          DataColumn(label: Text("ชื่อ")),
+          DataColumn(label: Text("ราคา")),
+          DataColumn(label: Text("")),
+        ],
+        rows: [
+          DataRow(cells: [
+            DataCell(Center(child: Text("1"))),
+            DataCell(Center(child: Text("name"))),
+            DataCell(Center(child: Text("free"))),
+            DataCell(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
                     ),
-                    SizedBox(width: 5.w),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                      ),
-                      child: Text("ลบ"),
+                    child: Text("แก้ไข", style: TextStyle(color: Colors.white)),
+                  ),
+                  SizedBox(width: 5.w),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
                     ),
-                  ],
-                ),
+                    child: Text("ลบ", style: TextStyle(color: Colors.white)),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ]),
         ],
       ),
     );
