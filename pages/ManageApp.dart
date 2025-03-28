@@ -4,6 +4,7 @@ import 'HomePage.dart';
 import 'SearchPage.dart';
 import 'MyProfilePage.dart';
 import 'MyCartPage.dart';
+import 'futures/AddApp.dart';
 
 void main() {
   runApp(MyApp());
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<ManageApp>
   Future<void> _loadImage() async {
     await Future.delayed(Duration(milliseconds: 500));
     setState(() {
-      isLoading = false; 
+      isLoading = false;
     });
   }
 
@@ -90,8 +91,14 @@ class _HomeScreenState extends State<ManageApp>
         context,
         MaterialPageRoute(builder: (context) => MyCartPage()),
       );
+    } else if (index == 5) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AddPage()),
+      );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,88 +134,95 @@ class _HomeScreenState extends State<ManageApp>
           ],
         ),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator()) 
-          : Row(
-        children: [
-          Container(
-            width: 50.w,
-            color: const Color(0xFF796F6F),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () => _onTabSelected(0),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    width: double.infinity,
-                    color:
-                        selectedIndex == 0
-                            ? const Color(0xFF878383)
-                            : const Color(0xFF796F6F),
-                    child: Column(
-                      children: [
-                        Icon(Icons.apps, color: Colors.white),
-                        Text("app", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => _onTabSelected(1),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10.h),
-                    width: double.infinity,
-                    color:
-                        selectedIndex == 1
-                            ? const Color(0xFF878383)
-                            : const Color(0xFF796F6F),
-                    child: Column(
-                      children: [
-                        Icon(Icons.add, color: Colors.white),
-                        Text("add", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(10.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Row(
                 children: [
-                  Text(
-                    "MyApp",
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    width: 50.w,
+                    color: const Color(0xFF796F6F),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () => _onTabSelected(1),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            width: double.infinity,
+                            color:
+                                selectedIndex == 1
+                                    ? const Color(0xFF878383)
+                                    : const Color(0xFF796F6F),
+                            child: Column(
+                              children: [
+                                Icon(Icons.apps, color: Colors.white),
+                                Text(
+                                  "app",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => _onTabSelected(5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            width: double.infinity,
+                            color:
+                                selectedIndex == 5
+                                    ? const Color(0xFF878383)
+                                    : const Color(0xFF796F6F),
+                            child: Column(
+                              children: [
+                                Icon(Icons.add, color: Colors.white),
+                                Text(
+                                  "add",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 10.h),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: List.generate(5, (index) => GameCard()),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(10.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "MyApp",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(5, (index) => GameCard()),
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          Text(
+                            "History added myGames",
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Expanded(child: GameHistoryTable()),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 20.h),
-                  Text(
-                    "History added myGames",
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Expanded(child: GameHistoryTable()),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -284,4 +298,3 @@ class GameHistoryTable extends StatelessWidget {
     );
   }
 }
-
