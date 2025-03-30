@@ -68,7 +68,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ),
                 SizedBox(height: 10),
                 DropdownButtonFormField<String>(
-                  dropdownColor: Colors.white, // ✅ เปลี่ยนแถบตัวเลือกเป็นสีขาว
+                  dropdownColor: Color(0xFF2F2F2F),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Color(0xFF444444),
@@ -93,14 +93,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           });
                         },
                         child: Container(
-                          color: _hoveredPaymentMethod == paymentMethod
-                              ? Colors.grey[300] // ✅ เปลี่ยนสีเมาส์ชี้เป็นเทาอ่อน
-                              : Colors.white, // ✅ เปลี่ยนแถบเป็นสีขาวตลอด
+                          color: _hoveredPaymentMethod == paymentMethod ? Colors.white : Colors.transparent,
                           padding: EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
                             _paymentMethods[paymentMethod]!,
                             style: TextStyle(
-                              color: Colors.black, // ✅ เปลี่ยนตัวอักษรเป็นสีดำ
+                              color: _hoveredPaymentMethod == paymentMethod ? Colors.black : Colors.white,
                             ),
                           ),
                         ),
