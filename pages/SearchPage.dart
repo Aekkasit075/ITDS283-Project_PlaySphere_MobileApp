@@ -10,11 +10,25 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage>
-    with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
   int selectedIndex = 2;
   late TabController _tabController;
   bool isLoading = true;
+  bool isTyping = false; // ใช้เช็คว่าเริ่มพิมพ์หรือยัง
+  bool isFocused = false; // ใช้เช็คว่า TextField ถูกเลือก
+  TextEditingController searchController = TextEditingController();
+  FocusNode focusNode = FocusNode(); // FocusNode สำหรับตรวจจับการคลิก
+  List<String> allApps = [
+    "Netflix",
+    "Notion",
+    "Nova Launcher",
+    "Nike Run Club",
+    "NFS Heat",
+    "Facebook",
+    "Instagram",
+    "Twitter",
+  ];
+  List<String> filteredApps = [];
 
   @override
   void initState() {
@@ -30,12 +44,40 @@ class _SearchPageState extends State<SearchPage>
       });
     });
     _loadImage();
+    searchController.addListener(_filterSearchResults);
+
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        setState(() {
+          isFocused = true; // เมื่อ TextField ถูกเลือก
+          filteredApps = allApps; // แสดงรายการทั้งหมดเมื่อคลิก
+        });
+      } else {
+        setState(() {
+          isFocused = false; // เมื่อ TextField ถูกคลิกแล้วออก
+        });
+      }
+    });
   }
 
   Future<void> _loadImage() async {
     await Future.delayed(Duration(milliseconds: 500));
     setState(() {
-      isLoading = false; 
+      isLoading = false;
+    });
+  }
+
+  void _filterSearchResults() {
+    String query = searchController.text.trim().toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        filteredApps = allApps; // เมื่อยังไม่พิมพ์เลย, ให้แสดงรายการทั้งหมด
+      } else {
+        filteredApps = allApps
+            .where((app) => app.toLowerCase().startsWith(query)) // กรองตามคำค้นหาของผู้ใช้
+            .toList();
+      }
+      isTyping = query.isNotEmpty; // ตั้งค่า isTyping เป็น true เมื่อเริ่มพิมพ์
     });
   }
 
@@ -69,6 +111,12 @@ class _SearchPageState extends State<SearchPage>
         MaterialPageRoute(builder: (context) => MyCartPage()),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose(); // อย่าลืม dispose focusNode
+    super.dispose();
   }
 
   @override
@@ -106,39 +154,76 @@ class _SearchPageState extends State<SearchPage>
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator()) 
+          ? Center(child: CircularProgressIndicator())
           : Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Color(0xFF205568), 
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0xFFD9D9D9), 
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Searched here',
-                          border: InputBorder.none,
+              width: double.infinity,
+              height: double.infinity,
+              color: Color(0xFF205568), // Keep the background color as dark blue
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+              child: Column(
+                children: [
+                  // Search bar
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFFD9D9D9),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: searchController,
+                              focusNode: focusNode, // ใช้ FocusNode ที่กำหนด
+                              decoration: InputDecoration(
+                                hintText: 'Search here...',
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.search, color: Colors.black),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+
+                  // Show all results when TextField is focused, then filter when typing
+                  Expanded(
+                    child: AnimatedOpacity(
+                      opacity: isFocused ? 1.0 : 0.0, // ซ่อนพื้นหลังขาวจนกว่าจะคลิก TextField
+                      duration: Duration(milliseconds: 300),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white, // White background when focused
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: ListView.builder(
+                          itemCount: isTyping ? filteredApps.length : filteredApps.length,
+                          itemBuilder: (context, index) {
+                            String app = filteredApps[index];
+                            return ListTile(
+                              title: Text(
+                                app,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              tileColor: Colors.grey[300],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              onTap: () {
+                                print("Selected: $app");
+                              },
+                            );
+                          },
                         ),
                       ),
                     ),
-                    Icon(Icons.search, color: Colors.black),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
