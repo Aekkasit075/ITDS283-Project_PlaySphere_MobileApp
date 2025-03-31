@@ -5,6 +5,7 @@ import 'SearchPage.dart';
 import 'MyProfilePage.dart';
 import 'MyCartPage.dart';
 import 'futures/AddApp.dart';
+import 'futures/EditApp.dart';
 
 void main() {
   runApp(MyApp());
@@ -98,7 +99,6 @@ class _HomeScreenState extends State<ManageApp>
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -270,8 +270,14 @@ class GameHistoryTable extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    //ปุ่มแก้ไข
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditAppPage()),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                       ),
@@ -281,8 +287,131 @@ class GameHistoryTable extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5.w),
+                    //ปุ่มลบ
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Row(
+                                children: [
+                                  Icon(Icons.warning, color: Colors.red),
+                                  SizedBox(width: 10),
+                                  Text("คำเตือน"),
+                                ],
+                              ),
+                              content: Text("คุณยืนยันที่จะลบแอปนี้หรือไม่?"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(
+                                      context,
+                                    ).pop(); // Close the dialog (Cancel)
+
+                                    // Show "ลบไม่สำเร็จ" (Delete failed) dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("ลบไม่สำเร็จ"),
+                                            ],
+                                          ),
+                                          content: Text(
+                                            "คุณได้ยกเลิกการลบแอปนี้",
+                                          ),
+                                          actions: <Widget>[
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(
+                                                  context,
+                                                ).pop(); // Close the "ลบไม่สำเร็จ" dialog
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.blue,
+                                              ),
+                                              child: Text(
+                                                "ตกลง",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text(
+                                    "ไม่",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Close the dialog (Yes)
+                                    Navigator.of(context).pop();
+
+                                    // Show "ลบสำเร็จ" (Delete success) dialog
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("ลบสำเร็จ"),
+                                            ],
+                                          ),
+                                          content: Text(
+                                            "แอปของคุณถูกลบเรียบร้อยแล้ว",
+                                          ),
+                                          actions: <Widget>[
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(
+                                                  context,
+                                                ).pop(); // Close the "ลบสำเร็จ" dialog
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.blue,
+                                              ),
+                                              child: Text(
+                                                "ตกลง",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  child: Text(
+                                    "ใช่",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                       ),
