@@ -147,7 +147,7 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              sideMenuIndex = 5; // เลือก "add"
+                              sideMenuIndex = 5;
                             });
                             Navigator.pushReplacement(
                               context,
@@ -180,91 +180,280 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin {
                   Expanded(
                     child: Container(
                       color: Colors.grey[300],
-                      padding: EdgeInsets.all(10.w),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (sideMenuIndex == 5) ...[
-                              // ถ้าเลือก "add" จากแถบด้านซ้าย
-                              Text(
-                                "Add Game",
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10.w),
+                            child: Text(
+                              "Added Game",
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Center(
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      height: 100,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Icon(
-                                        Icons.image,
-                                        size: 40,
-                                        color: Colors.white,
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: 80.h,
+                                            width: 80.h,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Icon(
+                                              Icons.image,
+                                              size: 40,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5.h),
+                                          Icon(
+                                            Icons.camera_alt,
+                                            size: 25,
+                                            color: Colors.black54,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    SizedBox(height: 5),
-                                    Icon(
-                                      Icons.camera_alt,
-                                      size: 30,
-                                      color: Colors.black54,
+                                    SizedBox(height: 20.h),
+                                    _buildTextField("Name", "ใส่ข้อมูลชื่อเกม"),
+                                    _buildTextField(
+                                      "Size",
+                                      "ใส่ข้อมูลพื้นที่ของแอป",
                                     ),
+                                    _buildTextField(
+                                      "Price",
+                                      "ใส่ข้อมูลราคาของแอป",
+                                    ),
+                                    _buildTextField(
+                                      "Total downloads",
+                                      "ใส่ข้อมูลยอดดาวน์โหลด",
+                                    ),
+                                    _buildTextField(
+                                      "Description",
+                                      "ใส่ข้อมูลคำอธิบายของแอป",
+                                      maxLines: 3,
+                                    ),
+
+                                    SizedBox(height: 20.h),
+                                    _buildImageUploader('Banner Image'),
+                                    _buildImageUploader('Screenshot Image'),
+
+                                    SizedBox(height: 50.h),
                                   ],
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              _buildTextField('Name'),
-                              _buildTextField('Size'),
-                              _buildTextField('Price'),
-                              _buildTextField('Total downloads'),
-                              _buildTextField('Description', maxLines: 3),
-                              SizedBox(height: 10),
-                              _buildImageUploader('Banner Image'),
-                              _buildImageUploader('Screenshot Image'),
-                              SizedBox(height: 20),
-                              Align(
-                                alignment:
-                                    Alignment
-                                        .bottomRight, 
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                    16.0,
-                                  ), 
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.blue,
-                                        ),
-                                        child: Text(
-                                          'ยืนยัน',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                      OutlinedButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          'ยกเลิก',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ),
-                                    ],
+                            ),
+                          ),
+
+                          // ปุ่มกด
+                          Container(
+                            padding: EdgeInsets.all(16.w),
+                            color: Colors.grey[400],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.red,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text("คำเตือน"),
+                                            ],
+                                          ),
+                                          content: Text(
+                                            "คุณต้องการเพิ่มแอปนี้ใช่หรือไม่",
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(
+                                                  context,
+                                                ).pop(); // Close the first dialog
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (
+                                                    BuildContext context,
+                                                  ) {
+                                                    return AlertDialog(
+                                                      title: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.cancel,
+                                                            color: Colors.red,
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text(
+                                                            "เพิ่มไม่สำเร็จ",
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      content: Text(
+                                                        "คุณได้ยกเลิกการเพิ่มแอปนี้",
+                                                      ),
+                                                      actions: <Widget>[
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop(); // Close the second dialog
+                                                          },
+                                                          style:
+                                                              ElevatedButton.styleFrom(
+                                                                backgroundColor:
+                                                                    Colors.blue,
+                                                              ),
+                                                          child: Text(
+                                                            "ตกลง",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                "NO",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (
+                                                    BuildContext context,
+                                                  ) {
+                                                    return AlertDialog(
+                                                      title: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.check_circle,
+                                                            color: Colors.green,
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text("เพิ่มสำเร็จ"),
+                                                        ],
+                                                      ),
+                                                      content: Text(
+                                                        "แอปของคุณได้ถูกเพิ่มเรียบร้อยแล้ว",
+                                                      ),
+                                                      actions: <Widget>[
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            // Close the success dialog
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+
+                                                            // Navigate to the ManageApp page
+                                                            Navigator.pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ManageApp(),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style:
+                                                              ElevatedButton.styleFrom(
+                                                                backgroundColor:
+                                                                    Colors.blue,
+                                                              ),
+                                                          child: Text(
+                                                            "ตกลง",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.blue,
+                                              ),
+                                              child: Text(
+                                                "YES",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 25.w,
+                                      vertical: 12.h,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'ยืนยัน',
+                                    style: TextStyle(color: Colors.white),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ],
-                        ),
+
+                                SizedBox(width: 10.w),
+                                OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ManageApp(),
+                                      ),
+                                    );
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 25.w,
+                                      vertical: 12.h,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'ยกเลิก',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -273,15 +462,24 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _buildTextField(String label, {int maxLines = 1}) {
+  Widget _buildTextField(String label, String hint, {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        maxLines: maxLines,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 5),
+          TextField(
+            maxLines: maxLines,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: hint,
+              hintStyle: TextStyle(color: Colors.black45),
+            ),
+          ),
+          Divider(color: Colors.grey, thickness: 1),
+        ],
       ),
     );
   }
