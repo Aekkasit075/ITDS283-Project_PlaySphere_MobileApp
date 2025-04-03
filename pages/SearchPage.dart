@@ -4,31 +4,53 @@ import 'HomePage.dart';
 import 'ManageApp.dart';
 import 'MyProfilePage.dart';
 import 'MyCartPage.dart';
+import 'futures/DetailPage.dart';
 
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateMixin {
+class _SearchPageState extends State<SearchPage>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = 2;
   late TabController _tabController;
   bool isLoading = true;
-  bool isTyping = false; // ใช้เช็คว่าเริ่มพิมพ์หรือยัง
-  bool isFocused = false; // ใช้เช็คว่า TextField ถูกเลือก
+  bool isTyping = false;
+  bool isFocused = false;
   TextEditingController searchController = TextEditingController();
-  FocusNode focusNode = FocusNode(); // FocusNode สำหรับตรวจจับการคลิก
-  List<String> allApps = [
-    "Netflix",
-    "Notion",
-    "Nova Launcher",
-    "Nike Run Club",
-    "NFS Heat",
-    "Facebook",
-    "Instagram",
-    "Twitter",
+  FocusNode focusNode = FocusNode();
+  List<Map<String, String>> allApps = [
+    {
+      "name": "Netflix",
+      "downloads": "10M",
+      "size": "100MB",
+      "price": "THB 69.00",
+    },
+    {"name": "Notion", "downloads": "5M", "size": "50MB", "price": "Free"},
+    {
+      "name": "Nova Launcher",
+      "downloads": "2M",
+      "size": "25MB",
+      "price": "THB 19.00",
+    },
+    {
+      "name": "Nike Run Club",
+      "downloads": "8M",
+      "size": "75MB",
+      "price": "Free",
+    },
+    {
+      "name": "NFS Heat",
+      "downloads": "15M",
+      "size": "1GB",
+      "price": "THB 199.00",
+    },
+    {"name": "Facebook", "downloads": "50M", "size": "200MB", "price": "Free"},
+    {"name": "Instagram", "downloads": "40M", "size": "180MB", "price": "Free"},
+    {"name": "Twitter", "downloads": "30M", "size": "150MB", "price": "Free"},
   ];
-  List<String> filteredApps = [];
+  List<Map<String, String>> filteredApps = [];
 
   @override
   void initState() {
@@ -45,39 +67,17 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     });
     _loadImage();
     searchController.addListener(_filterSearchResults);
-
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         setState(() {
-          isFocused = true; // เมื่อ TextField ถูกเลือก
-          filteredApps = allApps; // แสดงรายการทั้งหมดเมื่อคลิก
+          isFocused = true;
+          filteredApps = allApps;
         });
       } else {
         setState(() {
-          isFocused = false; // เมื่อ TextField ถูกคลิกแล้วออก
+          isFocused = false;
         });
       }
-    });
-  }
-
-  Future<void> _loadImage() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  void _filterSearchResults() {
-    String query = searchController.text.trim().toLowerCase();
-    setState(() {
-      if (query.isEmpty) {
-        filteredApps = allApps; // เมื่อยังไม่พิมพ์เลย, ให้แสดงรายการทั้งหมด
-      } else {
-        filteredApps = allApps
-            .where((app) => app.toLowerCase().startsWith(query)) // กรองตามคำค้นหาของผู้ใช้
-            .toList();
-      }
-      isTyping = query.isNotEmpty; // ตั้งค่า isTyping เป็น true เมื่อเริ่มพิมพ์
     });
   }
 
@@ -113,10 +113,26 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     }
   }
 
-  @override
-  void dispose() {
-    focusNode.dispose(); // อย่าลืม dispose focusNode
-    super.dispose();
+  Future<void> _loadImage() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void _filterSearchResults() {
+    String query = searchController.text.trim().toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        filteredApps = allApps;
+      } else {
+        filteredApps =
+            allApps
+                .where((app) => app["name"]!.toLowerCase().startsWith(query))
+                .toList();
+      }
+      isTyping = query.isNotEmpty;
+    });
   }
 
   @override
@@ -153,77 +169,126 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
           ],
         ),
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Color(0xFF205568), // Keep the background color as dark blue
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              child: Column(
-                children: [
-                  // Search bar
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: searchController,
-                              focusNode: focusNode, // ใช้ FocusNode ที่กำหนด
-                              decoration: InputDecoration(
-                                hintText: 'Search here...',
-                                border: InputBorder.none,
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                color: Color(0xFF205568),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: searchController,
+                                focusNode: focusNode,
+                                decoration: InputDecoration(
+                                  hintText: 'Search here...',
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
-                          ),
-                          Icon(Icons.search, color: Colors.black),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-
-                  // Show all results when TextField is focused, then filter when typing
-                  Expanded(
-                    child: AnimatedOpacity(
-                      opacity: isFocused ? 1.0 : 0.0, // ซ่อนพื้นหลังขาวจนกว่าจะคลิก TextField
-                      duration: Duration(milliseconds: 300),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white, // White background when focused
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: ListView.builder(
-                          itemCount: isTyping ? filteredApps.length : filteredApps.length,
-                          itemBuilder: (context, index) {
-                            String app = filteredApps[index];
-                            return ListTile(
-                              title: Text(
-                                app,
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              tileColor: Colors.grey[300],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              onTap: () {
-                                print("Selected: $app");
-                              },
-                            );
-                          },
+                            Icon(Icons.search, color: Colors.black),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 10.h),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredApps.length,
+                        itemBuilder: (context, index) {
+                          var app = filteredApps[index];
+                          return GestureDetector(
+                            onTap: () {
+                              print("Tapped on: ${app["name"]}");
+                              // เมื่อคลิกที่แถวทั้งแถวจะไปที่หน้า DetailPage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => DetailPage(
+                                        app: app,
+                                      ), // ส่งข้อมูล app ไปยังหน้า DetailPage
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.grey,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              child: ListTile(
+                                leading: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 1.h),
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: SizedBox(width: 40.w, height: 40.h),
+                                ),
+                                title: Text(
+                                  app["name"]!,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Downloads: ${app["downloads"]}",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      "Size: ${app["size"]}",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                trailing: Container(
+                                  width: 90.w,
+                                  height: 30.h,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        app["price"] == "Free"
+                                            ? Colors.green
+                                            : Colors.blue,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Text(
+                                    app["price"]!,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
     );
   }
 }
