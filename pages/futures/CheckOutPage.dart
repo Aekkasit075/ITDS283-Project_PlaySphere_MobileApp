@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.teal),
-      home: CheckOutPage(),
-    );
-  }
-}
+import 'PaymentPage.dart';
 
 class CheckOutPage extends StatefulWidget {
   @override
@@ -22,10 +7,10 @@ class CheckOutPage extends StatefulWidget {
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
-  String? _selectedPaymentMethod = "none"; 
+  String? _selectedPaymentMethod = "none";
 
   final Map<String, String> _paymentMethods = {
-    'none': 'กรุณาเลือกวิธีชำระเงิน', 
+    'none': 'กรุณาเลือกวิธีชำระเงิน',
     'paypal': 'PayPal',
     'visa': 'Visa',
     'truemoney': 'TrueMoney',
@@ -56,7 +41,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
           child: Container(
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Color(0xFF2F2F2F),
+              color: Color(0xFF4D4C52),
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Column(
@@ -69,7 +54,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 ),
                 SizedBox(height: 10),
                 DropdownButtonFormField<String>(
-                  isExpanded: true, // ป้องกันตัวอักษรโดนตัด
+                  isExpanded: true,
                   dropdownColor: Color(0xFF2F2F2F),
                   decoration: InputDecoration(
                     filled: true,
@@ -80,17 +65,21 @@ class _CheckOutPageState extends State<CheckOutPage> {
                     ),
                   ),
                   value: _selectedPaymentMethod,
-                  items: _paymentMethods.keys.map((paymentMethod) {
-                    return DropdownMenuItem(
-                      value: paymentMethod,
-                      child: Text(
-                        _paymentMethods[paymentMethod]!,
-                        style: TextStyle(
-                          color: paymentMethod == 'none' ? Colors.grey : Colors.white,
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                  items:
+                      _paymentMethods.keys.map((paymentMethod) {
+                        return DropdownMenuItem(
+                          value: paymentMethod,
+                          child: Text(
+                            _paymentMethods[paymentMethod]!,
+                            style: TextStyle(
+                              color:
+                                  paymentMethod == 'none'
+                                      ? Colors.grey
+                                      : Colors.white,
+                            ),
+                          ),
+                        );
+                      }).toList(),
                   onChanged: (value) {
                     setState(() {
                       _selectedPaymentMethod = value;
@@ -102,15 +91,27 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _selectedPaymentMethod == "none"
-                        ? null // ปิดการกดถ้าเลือก "กรุณาเลือกวิธีชำระเงิน"
-                        : () {
-                            // ดำเนินการต่อ
-                          },
+                    onPressed:
+                        _selectedPaymentMethod == "none"
+                            ? null
+                            : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => PaymentPage(
+                                        selectedPaymentMethod:
+                                            _paymentMethods[_selectedPaymentMethod] ?? "ไม่ระบุ",
+                                      ),
+                                ),
+                              );
+                            },
+
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: _selectedPaymentMethod == "none"
-                          ? Color(0xFF888888) // ปิดปุ่ม
-                          : Colors.green, // เปิดปุ่ม
+                      backgroundColor:
+                          _selectedPaymentMethod == "none"
+                              ? Color(0xFFA2A2A2) // ปิดปุ่ม
+                              : Colors.green, // เปิดปุ่ม
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -129,4 +130,3 @@ class _CheckOutPageState extends State<CheckOutPage> {
     );
   }
 }
-
