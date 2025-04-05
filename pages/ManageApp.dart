@@ -111,9 +111,22 @@ class _HomeScreenState extends State<ManageApp>
             Image.asset('assets/PlaySphere_Logo.png', height: 80.h),
             Row(
               children: [
-                Text("Account", style: TextStyle(color: Colors.white)),
-                SizedBox(width: 5.w),
-                Icon(Icons.account_circle, color: Colors.white),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to MyProfilePage when tapped
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyProfilePage()),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Text("Account", style: TextStyle(color: Colors.white)),
+                      SizedBox(width: 5.w),
+                      Icon(Icons.account_circle, color: Colors.white),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],
