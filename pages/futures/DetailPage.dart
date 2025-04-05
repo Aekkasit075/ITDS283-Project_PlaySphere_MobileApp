@@ -198,8 +198,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 "Put in your cart!!!",
                                                 style: TextStyle(
                                                   color:
-                                                      Colors
-                                                          .white, // Text color set to white
+                                                      Colors.white, 
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -210,9 +209,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 child: Text(
                                                   "back",
                                                   style: TextStyle(
-                                                    color:
-                                                        Colors
-                                                            .grey[300], // Lighter text for contrast
+                                                    color: Colors.grey[300], 
                                                   ),
                                                 ),
                                               ),
@@ -295,9 +292,7 @@ class _DetailPageState extends State<DetailPage> {
                                                 );
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Color(
-                                                  0xFF4D4C52,
-                                                ), // Brown background
+                                                backgroundColor: Color(0xFF4D4C52,), 
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -346,22 +341,16 @@ class _DetailPageState extends State<DetailPage> {
                                                             Text(
                                                               "Put in your cart!!!",
                                                               style: TextStyle(
-                                                                color:
-                                                                    Colors
-                                                                        .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                color:Colors.black,
+                                                                fontWeight: FontWeight.bold,
                                                               ),
                                                             ),
                                                             SizedBox(
                                                               height: 20,
                                                             ),
                                                             Icon(
-                                                              Icons
-                                                                  .check_circle_outline,
-                                                              color:
-                                                                  Colors.green,
+                                                              Icons.check_circle_outline,
+                                                              color:Colors.green,
                                                               size: 50,
                                                             ),
                                                             SizedBox(
@@ -370,9 +359,7 @@ class _DetailPageState extends State<DetailPage> {
                                                             Text(
                                                               "เพิ่มลงรถเข็นสำเร็จแล้ว",
                                                               style: TextStyle(
-                                                                color:
-                                                                    Colors
-                                                                        .black,
+                                                                color:Colors.black,
                                                               ),
                                                             ),
                                                             SizedBox(
@@ -403,9 +390,7 @@ class _DetailPageState extends State<DetailPage> {
                                                                   child: Text(
                                                                     "ตกลง",
                                                                     style: TextStyle(
-                                                                      color:
-                                                                          Colors
-                                                                              .white,
+                                                                      color:Colors.white,
                                                                     ),
                                                                   ),
                                                                 ),
@@ -418,17 +403,13 @@ class _DetailPageState extends State<DetailPage> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder:
-                                                                            (
-                                                                              _,
-                                                                            ) =>
-                                                                                MyCartPage(),
+                                                                          (_,) =>
+                                                                          MyCartPage(),
                                                                       ),
                                                                     );
                                                                   },
                                                                   style: ElevatedButton.styleFrom(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .blue,
+                                                                    backgroundColor:Colors.blue,
                                                                     shape: RoundedRectangleBorder(
                                                                       borderRadius:
                                                                           BorderRadius.circular(
